@@ -1,0 +1,37 @@
+# Evaluation cells of the paper (Table 2). Each cell evaluates the eps-greedy
+# versions of one evaluation policy pi_e, eps in `epsilons`, with one world model,
+# and compares the estimates to real-environment ground truth (GT).
+
+epsilons: [0.0, 0.25, 0.5, 0.75, 1.0]
+seeds: [0, 1, 2, 3, 4]
+
+cells:
+  hotpotqa-dpo:
+    world_model: hotpotqa
+    pi_e: ReAct-HotpotQA-DPO-merged
+    ope: {horizon: 8}
+    gt: {episodes: 128, max_steps: 12, history_length: 2}
+
+  hotpotqa-prm:
+    world_model: hotpotqa
+    pi_e: ReAct-HotpotQA-PRM-merged
+    ope: {horizon: 8}
+    gt: {episodes: 64, max_steps: 8, history_length: 2}
+
+  scienceworld-eto:
+    world_model: scienceworld
+    pi_e: sw-llama-eto
+    ope: {horizon: 12}
+    gt: {episodes: 64, max_steps: 30, history_length: 8}
+
+  alfworld-iter1:
+    world_model: alfworld
+    pi_e: leap-alf-iter1
+    ope: {horizon: 18, n_rollouts: 64, gpu_memory_utilization: 0.40}
+    gt: {episodes: 72, max_steps: 30}
+
+  alfworld-iter3:
+    world_model: alfworld-mixed
+    pi_e: leap-alf-iter3
+    ope: {horizon: 12}
+    gt: {episodes: 72, max_steps: 30}

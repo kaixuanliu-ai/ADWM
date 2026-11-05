@@ -1,0 +1,27 @@
+# ALFWorld TextWorld (AlfredTWEnv) configuration for collect/alfworld/collector.py.
+# Contains only the keys AlfredTWEnv reads. $ALFWORLD_DATA is expanded at load time.
+
+dataset:
+  data_path: '$ALFWORLD_DATA/json_2.1.1/train'
+  eval_id_data_path: '$ALFWORLD_DATA/json_2.1.1/valid_seen'
+  eval_ood_data_path: '$ALFWORLD_DATA/json_2.1.1/valid_unseen'
+  num_train_games: -1                # <= 0: use all games of the split
+  num_eval_games: -1                 # <= 0: use all games of the split
+
+logic:
+  domain: '$ALFWORLD_DATA/logic/alfred.pddl'    # PDDL domain (world dynamics)
+  grammar: '$ALFWORLD_DATA/logic/alfred.twl2'   # grammar of the text feedback
+
+env:
+  domain_randomization: False        # shuffle print order and object ids (train split only)
+  task_types: [1, 2, 3, 4, 5, 6]     # 1 Pick & Place, 2 Examine in Light, 3 Clean & Place,
+                                     # 4 Heat & Place, 5 Cool & Place, 6 Pick Two & Place
+  expert_type: "handcoded"           # 'handcoded' or 'planner'
+  goal_desc_human_anns_prob: 0.0     # templated (not human-annotated) goal descriptions
+
+general:
+  training_method: 'dagger'          # selects the step limit below
+
+dagger:
+  training:
+    max_nb_steps_per_episode: 50     # environment-side episode step limit

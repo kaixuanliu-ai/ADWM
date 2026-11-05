@@ -1,0 +1,43 @@
+# World models used in the paper: the behavior data each is trained on, how that
+# data is collected, and the training settings that differ from adwm/config.py.
+#
+# Behavior data lives in <data_dir>/<policy>/<prompt>/trajectories.jsonl.
+# Each prompt directory is an independent collection run of the same policy;
+# p<k> uses episode seed offset 42 + k * seed_stride.
+
+hotpotqa:
+  env: hotpotqa
+  data_dir: data/hotpotqa
+  behavior:
+    - {policy: sft, model: ReAct-HotpotQA-SFT-merged, prompts: [p0, p1], episodes: 256,
+       max_steps: 8, batch_size: 24, seed_stride: 1000}
+  train: {seq_len: 6, success_upsample: 5, amp: true}
+  adapter: {llm: ReAct-HotpotQA-PRM-merged, epochs: 20, batch_size: 64, lr: 1.0e-4}
+
+scienceworld:
+  env: scienceworld
+  data_dir: data/scienceworld
+  behavior:
+    - {policy: sw-llama-sft, model: sw-llama-sft, prompts: [p0, p1], episodes: 256,
+       max_steps: 30, history_length: 8}
+  train: {seq_len: 10, success_upsample: 5, amp: true}
+  adapter: {llm: sw-llama-eto, epochs: 5, batch_size: 4, lr: 5.0e-4}
+
+alfworld:
+  env: alfworld
+  data_dir: data/alfworld
+  behavior:
+    - {policy: Llama-3.1-8B, model: Llama-3.1-8B-Instruct, prompts: [p0, p1], episodes: 128,
+       max_steps: 30}
+  train: {seq_len: 10, success_upsample: 20, amp: true}
+  adapter: {llm: leap-alf-iter3, epochs: 5, batch_size: 4, lr: 5.0e-4}
+
+alfworld-mixed:
+  env: alfworld
+  data_dir: data/alfworld_mixed
+  behavior:
+    - {policy: Llama-3.1-8B, model: Llama-3.1-8B-Instruct, prompts: [p0, p1], episodes: 264, max_steps: 30}
+    - {policy: leap-alf-iter0, model: leap-alf-iter0, prompts: [p0, p1], episodes: 72, max_steps: 30}
+    - {policy: leap-alf-iter2, model: leap-alf-iter2, prompts: [p0], episodes: 72, max_steps: 30}
+  train: {seq_len: 10, success_upsample: 5, amp: false}
+  adapter: {llm: leap-alf-iter3, epochs: 5, batch_size: 4, lr: 5.0e-4}
